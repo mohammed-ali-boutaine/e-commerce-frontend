@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const RegisterForm = () => {
   const [name, setName] = useState('');
@@ -27,6 +27,7 @@ const RegisterForm = () => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: 'include',  // Sends cookies with the request
         body: JSON.stringify({
           name,
           email,
@@ -39,12 +40,15 @@ const RegisterForm = () => {
       if (!response.ok) {
         throw new Error(data.message || 'Registration failed');
       }
-      
+      localStorage.setItem('token', data.token);
+
       setSuccess(true);
       // Optional: auto-login the user
       // localStorage.setItem('token', data.token);
       // window.location.href = '/dashboard';
     } catch (err) {
+      console.log(err.message);
+      
       setError(err.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
